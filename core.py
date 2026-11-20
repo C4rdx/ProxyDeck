@@ -288,15 +288,15 @@ def show_rows(rows):
     print(f"{'#':>3} {'ENDPOINT':<23} {'TCP':>6} {'WEB':>7} {'TAGS':<23} {'COUNTRY':<16} STATUS")
     print("-"*100)
     for i,r in enumerate(rows,1):
-        tcp=str(r.get("tcp_ping_ms") if r.get("tcp_ping_ms") is not None else "—")
-        web=str(r.get("latency_ms") if r.get("latency_ms") is not None else "—")
+        tcp=str(r.get("tcp_ping_ms") if r.get("tcp_ping_ms") is not None else "-")
+        web=str(r.get("latency_ms") if r.get("latency_ms") is not None else "-")
         print(f"{i:>3} {r.get('address',''):<23} {tcp:>6} {web:>7} {tags(r):<23} {r.get('country','')[:16]:<16} {r.get('status','?')}")
 def menu():
     while True:
         clear_screen(); print_header()
         print("1. Refresh sources (discover new endpoints)")
         print("2. Test / ping all saved proxies")
-        print("3. Show saved proxies (sorted by response time)")
+        print("3. Show saved proxies (sorted by TCP ping)")
         print("4. Connect to an online HTTP proxy")
         print("5. Disconnect and restore previous settings")
         print("6. Open local dashboard")

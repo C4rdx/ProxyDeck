@@ -1,56 +1,332 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ProxyDeck — Proxy workspace</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>ProxyDeck | مدیریت و ارزیابی پراکسی</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
-:root{color-scheme:dark;--bg:#0c1017;--side:#101722;--panel:#141d29;--panel2:#192433;--line:#263446;--text:#e7edf5;--muted:#8998aa;--blue:#78aaff;--green:#4fd1a1;--red:#ef7e88;--amber:#e9bd70;--radius:11px}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:13px/1.65 Vazirmatn,"Segoe UI",sans-serif}button,input,select{font:inherit}button{border:1px solid var(--line);background:#1a2635;color:var(--text);border-radius:8px;padding:7px 11px;cursor:pointer;transition:.15s}button:hover{border-color:#6288bd;background:#223247}button:disabled{opacity:.35;cursor:not-allowed}.primary{background:#285da9;border-color:#3977c8}.quiet{background:transparent}.danger{color:#ffb1b8}.app{min-height:100vh;display:grid;grid-template-columns:218px minmax(0,1fr)}aside{background:var(--side);border-left:1px solid var(--line);padding:20px 13px;display:flex;flex-direction:column;gap:22px}.brand{display:flex;align-items:center;gap:10px;padding:0 8px}.logo{width:34px;height:34px;border-radius:10px;background:#285da9;display:grid;place-items:center;font-size:18px;font-weight:800}.brand strong{font-size:16px;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-size:10px}.nav-label{color:#63748a;font-size:10px;padding:0 10px;margin-bottom:6px}.nav button{width:100%;text-align:right;background:transparent;border-color:transparent;color:#aebaca;margin:2px 0;padding:8px 10px}.nav button.active{background:#1b2b40;border-color:#2b4565;color:#eaf2ff}.nav button span{display:inline-block;width:25px;color:#7890ae}.side-bottom{margin-top:auto;border-top:1px solid var(--line);padding:14px 8px;color:var(--muted);font-size:11px}.main{min-width:0;padding:22px 25px 35px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:18px}.page-title h1{font-size:19px;margin:0;font-weight:700}.page-title p{margin:2px 0 0;color:var(--muted);font-size:11px}.top-actions{display:flex;gap:7px;flex-wrap:wrap}.connection{display:flex;align-items:center;gap:12px;background:#121d2a;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:15px;min-width:0}.led{width:8px;height:8px;border-radius:50%;background:#69798b;flex:none}.led.on{background:var(--green);box-shadow:0 0 10px #4fd1a155}.conn-info{min-width:0;flex:1}.conn-info small{color:var(--muted);display:block;font-size:10px}.conn-info strong{display:block;direction:ltr;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 12px/1.7 Consolas,monospace}.conn-actions{display:flex;gap:6px}.stats{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;margin-bottom:14px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}.stat label{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:23px;font-weight:700;line-height:1.5}.stat em{font-style:normal;color:var(--muted);font-size:10px;margin-right:6px}.workspace{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}.task{padding:11px 14px;background:#111a25;border:1px solid var(--line);border-radius:10px;margin-bottom:14px;overflow:hidden;display:flex;align-items:center;gap:12px}.task-icon{width:28px;height:28px;border-radius:8px;background:#1e3045;display:grid;place-items:center;color:var(--blue);flex:none}.task-content{min-width:0;flex:1}.task-content strong{display:block;font-size:11px}.task-content small{display:block;color:var(--muted);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.progress{height:3px;background:#263548;margin-top:6px;border-radius:5px;overflow:hidden}.bar{height:100%;width:0;background:#70a8ff;transition:width .2s}.task-idle{color:var(--muted);font-size:11px}.filters{padding:12px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line)}input,select{background:#0e1722;color:var(--text);border:1px solid var(--line);border-radius:7px;padding:7px 9px;outline:none}input:focus,select:focus{border-color:#5785c2}.search{width:230px;max-width:100%}.filters select{min-width:115px}.tabs{display:flex;gap:4px;padding:9px 14px 0;border-bottom:1px solid var(--line);overflow:auto}.tabs button{background:transparent;border:0;border-radius:0;color:var(--muted);white-space:nowrap;padding:8px 12px;border-bottom:2px solid transparent}.tabs button.active{color:#eaf2ff;border-bottom-color:var(--blue)}.table-wrap{overflow:auto;max-height:calc(100vh - 490px);min-height:250px}table{border-collapse:separate;border-spacing:0;width:100%;min-width:980px;table-layout:fixed}th,td{padding:8px 9px;text-align:right;border-bottom:1px solid #202d3b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}th{position:sticky;top:0;background:#182433;color:#aebccd;font-size:10px;font-weight:600;z-index:2;user-select:none}th .th-inner{display:flex;align-items:center;justify-content:space-between;gap:5px}th .grip{width:5px;height:17px;cursor:col-resize;flex:none;border-left:2px solid #46586d;opacity:.7}th .grip:hover{border-color:var(--blue);opacity:1}td{font-size:11px;color:#d4deea}tbody tr:hover td{background:#192636}tbody tr.selected td{background:#1a2c41}.endpoint{font:600 11px Consolas,monospace;direction:ltr;display:block;text-align:right;color:#e4edf9}.subline{display:block;color:var(--muted);font:10px Consolas,monospace;direction:ltr;text-align:right}.tag{display:inline-block;padding:1px 6px;border-radius:5px;background:#243348;color:#b9cbe0;font-size:9px;margin-left:2px}.tag.good{background:#15372f;color:#7ee1bd}.tag.bad{background:#40252b;color:#f4a4ac}.tag.old{background:#44371f;color:#e9c985}.row-actions{display:flex;gap:4px}.row-actions button{padding:4px 7px;font-size:10px}.muted{color:var(--muted)}.empty{text-align:center;padding:35px;color:var(--muted)}.footer{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;color:var(--muted);font-size:10px}.notice{margin-top:13px;padding:10px 13px;border:1px solid #4b402a;background:#211d16;color:#d6c49e;border-radius:9px;font-size:10px}.view{display:none}.view.active{display:block}.about{max-width:850px;padding:20px}.about h2{font-size:17px}.about p,.about li{color:#b4c1d0}.about code{font-family:Consolas,monospace;color:#a9c9ff}.mobile-menu{display:none}
-@media(max-width:1000px){.app{grid-template-columns:65px minmax(0,1fr)}aside{padding:18px 8px}.brand{padding:0;justify-content:center}.brand>div:last-child,.nav-label,.nav button .navtext,.side-bottom{display:none}.nav button{text-align:center;padding:10px 4px}.nav button span{width:auto}.main{padding:16px}.table-wrap{max-height:calc(100vh - 520px)}}
-@media(max-width:650px){.app{display:block}aside{display:none}.main{padding:12px}.topbar{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.connection{align-items:flex-start}.conn-actions{flex-direction:column}.filters .search{width:100%}.table-wrap{max-height:unset}.top-actions button{font-size:11px}}
-</style></head>
-<body><div class="app">
-<aside><div class="brand"><div class="logo">P</div><div><strong>ProxyDeck</strong><small>NETWORK WORKSPACE</small></div></div>
-<nav class="nav"><div class="nav-label">WORKSPACE</div><button class="active" data-view="proxies"><span>▦</span><span class="navtext">مدیریت پراکسی‌ها</span></button><button data-view="diagnostics"><span>◷</span><span class="navtext">تست و عیب‌یابی</span></button><button data-view="about"><span>ⓘ</span><span class="navtext">درباره برنامه</span></button></nav>
-<div class="side-bottom">ProxyDeck 0.2.0<br>Local-first · Open source</div></aside>
+:root{color-scheme:dark;--bg:#0b1018;--side:#0f1723;--panel:#131e2c;--panel2:#182638;--panel3:#1c2d42;--line:#26384d;--text:#e8eef6;--muted:#91a1b4;--blue:#7daeff;--blue2:#3977d5;--green:#52d4a6;--red:#f1848d;--amber:#e9bd70;--radius:15px;--shadow:0 14px 36px #0003}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 82% -15%,#1d3551 0,transparent 36%),var(--bg);color:var(--text);font:14px/1.75 Tahoma,"Segoe UI",Arial,sans-serif}
+button,input,select{font:inherit}
+button{border:1px solid var(--line);background:#1b2a3d;color:var(--text);border-radius:10px;padding:9px 14px;cursor:pointer;transition:background .16s,border-color .16s,transform .16s,opacity .16s}
+button:hover:not(:disabled){background:#263b55;border-color:#587ca7}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.38;cursor:not-allowed}
+button.primary{background:linear-gradient(135deg,#2863b5,#397bd4);border-color:#4c8be0;color:#fff}
+button.primary:hover:not(:disabled){background:linear-gradient(135deg,#3475ca,#4c8fe8)}
+button.ghost{background:transparent}
+button.danger{color:#ffb5bb;background:#38252d;border-color:#67404a}
+button.small{padding:6px 10px;font-size:12px}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.app{min-height:100vh;display:grid;grid-template-columns:252px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;background:linear-gradient(180deg,#111c2a,#0e1621);border-left:1px solid var(--line);padding:24px 17px;display:flex;flex-direction:column;gap:28px;z-index:5}
+.brand{display:flex;align-items:center;gap:12px;padding:0 7px}
+.brand-mark{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#3676ce,#1d4d8b);box-shadow:0 8px 24px #245da455;font-size:19px;font-weight:900;letter-spacing:-1px}
+.brand-name{font-size:17px;font-weight:800;letter-spacing:.2px}
+.brand-caption{display:block;color:#8295ad;font-size:10px;letter-spacing:1.5px;direction:ltr;text-align:right}
+.nav-group{display:grid;gap:7px}
+.nav-label{color:#6f8299;font-size:10px;font-weight:700;letter-spacing:1.4px;padding:0 12px 4px}
+.nav-item{width:100%;display:flex;align-items:center;gap:13px;text-align:right;padding:12px 13px;border:1px solid transparent;background:transparent;color:#aebdd0;border-radius:11px}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8;fill:none;flex:none}
+.nav-item span{font-size:13px;font-weight:600}
+.nav-item.active{color:#f0f6ff;background:linear-gradient(90deg,#1c3048,#1b2b40);border-color:#314b6a;box-shadow:inset -3px 0 #77aaff}
+.nav-item.active svg{color:var(--blue)}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:17px 9px 0;color:#8292a6;font-size:11px}
+.sidebar-bottom strong{display:block;color:#c4d0df;font-size:12px;margin-bottom:3px}
+.main{min-width:0;padding:28px clamp(18px,3vw,42px) 54px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:22px}
+.heading h1{margin:0;font-size:23px;font-weight:800;letter-spacing:-.3px}
+.heading p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.connection{display:flex;align-items:center;gap:14px;padding:14px 17px;margin-bottom:18px;background:linear-gradient(105deg,#14263a,#14202e);border:1px solid #304760;border-radius:var(--radius);box-shadow:var(--shadow)}
+.connection-led{width:11px;height:11px;border-radius:50%;background:#75869a;flex:none}
+.connection-led.on{background:var(--green);box-shadow:0 0 0 5px #52d4a61b,0 0 18px #52d4a688}
+.connection-info{min-width:0;flex:1}
+.connection-info small{display:block;color:var(--muted);font-size:10px}
+.connection-info strong{display:block;font:600 13px/1.7 Consolas,monospace;direction:ltr;text-align:right;overflow-wrap:anywhere}
+.connection-actions{display:flex;gap:7px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.stat{position:relative;overflow:hidden;background:linear-gradient(145deg,#172435,#121d2a);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;min-width:0}
+.stat:after{content:"";position:absolute;width:78px;height:78px;border:1px solid #ffffff0b;border-radius:50%;left:-28px;top:-32px}
+.stat-label{color:var(--muted);font-size:11px}
+.stat-value{display:block;font-size:28px;font-weight:800;line-height:1.5;font-variant-numeric:tabular-nums}
+.stat-foot{color:#71859c;font-size:10px}
+.panel{background:linear-gradient(145deg,#151f2d,#121b27);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:18px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 19px;border-bottom:1px solid var(--line)}
+.panel-title{margin:0;font-size:14px;font-weight:800}
+.panel-subtitle{margin:2px 0 0;color:var(--muted);font-size:11px}
+.panel-body{padding:18px 19px}
+.operation{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:15px 18px;background:#121d2a;border:1px solid var(--line);border-radius:var(--radius)}
+.operation-symbol{width:40px;height:40px;display:grid;place-items:center;background:#203653;color:var(--blue);border-radius:12px;flex:none}
+.operation-symbol svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.operation-info{min-width:0;flex:1}
+.operation-title{font-weight:800;font-size:12px}
+.operation-message{color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+.progress-line{height:5px;background:#26374a;border-radius:9px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#4f8fe2,#80b7ff);border-radius:9px;transition:width .2s}
+.operation-count{font-size:11px;color:#a9bdd5;white-space:nowrap;font-variant-numeric:tabular-nums}
+.operation-cancel{display:none}
+.operation-cancel.visible{display:block}
+.target-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.field{display:grid;gap:6px;min-width:0}
+.field label{color:#c3cfdd;font-size:11px;font-weight:700}
+input,select{width:100%;min-width:0;background:#0d1723;color:var(--text);border:1px solid #30435a;border-radius:10px;padding:10px 12px;outline:none}
+input:focus,select:focus{border-color:#6599d8;box-shadow:0 0 0 3px #6599d822}
+input::placeholder{color:#6f8197}
+.helper{font-size:10px;color:var(--muted);margin-top:9px;line-height:1.9}
+.privacy-note{padding:11px 13px;margin-top:12px;border:1px solid #57482f;background:#292317;color:#d8c49c;border-radius:10px;font-size:11px;line-height:1.9}
+.toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:14px 17px;border-bottom:1px solid var(--line)}
+.toolbar .search{flex:1 1 220px}
+.toolbar select{width:auto;min-width:125px}
+.tabs{display:flex;align-items:center;gap:5px;padding:10px 17px 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:transparent;border:0;border-bottom:2px solid transparent;border-radius:0;color:var(--muted);white-space:nowrap;padding:9px 13px;font-size:11px}
+.tab.active{color:#eaf3ff;border-bottom-color:var(--blue)}
+.table-wrap{overflow-x:auto;overflow-y:clip}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1050px;table-layout:auto}
+thead th{position:sticky;top:0;z-index:2;background:#1b2a3c;color:#9fb0c4;font-size:10px;font-weight:700;text-align:right;white-space:nowrap;padding:12px 11px;border-bottom:1px solid #34485f;cursor:pointer;user-select:none}
+tbody td{padding:11px;border-bottom:1px solid #233246;color:#d4deea;font-size:11px;white-space:nowrap;vertical-align:middle}
+tbody tr:hover td{background:#19283a}
+tbody tr.selected td{background:#1a3049}
+.endpoint{display:block;font:600 12px Consolas,monospace;direction:ltr;text-align:right;color:#e5effb}
+.endpoint-meta{display:block;color:#8194aa;font:10px Consolas,monospace;direction:ltr;text-align:right}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:6px;background:#27374b;color:#bdcde0;font-size:10px}
+.pill.good{background:#173a32;color:#7de0bd}
+.pill.bad{background:#41282f;color:#f5a5ad}
+.pill.warn{background:#40351f;color:#e9cb8c}
+.pill.neutral{background:#293647;color:#bdc9d8}
+.row-actions{display:flex;gap:5px}
+.row-actions button{font-size:10px;padding:6px 9px}
+.empty{padding:42px 15px;text-align:center;color:var(--muted)}
+.table-foot{display:flex;justify-content:space-between;gap:12px;padding:12px 17px;color:var(--muted);font-size:10px}
+.view{display:none}
+.view.active{display:block}
+.sources-list{display:grid;gap:10px}
+.source-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;padding:14px 15px;background:#121d2a;border:1px solid var(--line);border-radius:12px}
+.source-name{font-size:12px;font-weight:800}
+.source-url{display:block;color:#8194aa;font:10px/1.7 Consolas,monospace;direction:ltr;text-align:right;overflow-wrap:anywhere}
+.source-meta{color:var(--muted);font-size:10px;margin-top:4px}
+.switch{position:relative;display:inline-flex;align-items:center;gap:9px;color:#aebdd0;font-size:11px;white-space:nowrap;cursor:pointer}
+.switch input{appearance:none;width:36px;height:20px;padding:0;border:1px solid #43566e;border-radius:99px;background:#28394d;cursor:pointer;transition:.2s}
+.switch input:checked{background:#2c6cba;border-color:#5797e9}
+.switch input:after{content:"";display:block;width:14px;height:14px;margin:2px;border-radius:50%;background:#dce7f4;transition:.2s}
+.switch input:checked:after{transform:translateX(-16px);background:white}
+.add-source{display:grid;grid-template-columns:minmax(150px,.6fr) minmax(240px,1.5fr) auto;gap:10px;align-items:end;margin-top:18px;padding:15px;background:#101a27;border:1px dashed #3a4e66;border-radius:12px}
+.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.info-card{padding:16px;background:#121d2a;border:1px solid var(--line);border-radius:12px}
+.info-card h3{margin:0 0 7px;font-size:12px}
+.info-card p{margin:0;color:var(--muted);font-size:11px;line-height:2}
+.about-copy{max-width:900px;color:#b6c4d4;font-size:12px;line-height:2.1}
+.about-copy h2{font-size:19px;color:var(--text)}
+.about-copy h3{font-size:13px;color:#dce7f3;margin:22px 0 5px}
+.about-copy code{font-family:Consolas,monospace;color:#a9c9ff}
+.about-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.toast{position:fixed;bottom:22px;left:22px;max-width:min(420px,calc(100vw - 44px));padding:12px 16px;background:#1c2d42;border:1px solid #405b7b;border-radius:12px;box-shadow:var(--shadow);font-size:12px;z-index:20;opacity:0;transform:translateY(12px);pointer-events:none;transition:.2s}
+.toast.show{opacity:1;transform:translateY(0)}
+.muted{color:var(--muted)}
+@media(max-width:1100px){.app{grid-template-columns:82px minmax(0,1fr)}.sidebar{padding:22px 9px}.brand{justify-content:center;padding:0}.brand-copy,.nav-label,.nav-item span,.sidebar-bottom{display:none}.nav-item{justify-content:center;padding:13px 7px}.nav-item svg{width:24px;height:24px}.nav-group{gap:10px}}
+@media(max-width:760px){.app{display:block}.sidebar{position:sticky;top:0;width:100%;height:auto;padding:9px 12px;border-left:0;border-bottom:1px solid var(--line);display:flex;flex-direction:row;align-items:center;gap:12px}.brand{display:none}.nav-group{display:flex;flex:1;justify-content:space-around;gap:4px}.nav-label{display:none}.nav-item{width:auto;min-width:48px;padding:9px 12px}.nav-item span{display:none}.nav-item svg{width:22px;height:22px}.main{padding:19px 13px 40px}.topbar{align-items:flex-start;flex-direction:column}.heading h1{font-size:20px}.top-actions{width:100%}.top-actions button{flex:1}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{padding:12px}.stat-value{font-size:24px}.connection{align-items:flex-start}.connection-actions{flex-direction:column}.target-grid{grid-template-columns:1fr}.target-grid button{width:100%}.info-grid{grid-template-columns:1fr}.add-source{grid-template-columns:1fr}.source-card{grid-template-columns:minmax(0,1fr) auto}.operation{align-items:flex-start;flex-wrap:wrap}.operation-count{margin-right:auto}.panel-head{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">PD</div>
+    <div class="brand-copy"><div class="brand-name">ProxyDeck</div><small class="brand-caption">PROXY WORKSPACE</small></div>
+  </div>
+  <nav class="nav-group" aria-label="ناوبری اصلی">
+    <div class="nav-label">WORKSPACE</div>
+    <button class="nav-item active" data-view="dashboard" title="داشبورد">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg><span>داشبورد و پراکسی‌ها</span>
+    </button>
+    <button class="nav-item" data-view="sources" title="مدیریت منابع">
+      <svg viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/><circle cx="8" cy="6.5" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="17.5" r="2"/></svg><span>منابع پراکسی</span>
+    </button>
+    <button class="nav-item" data-view="diagnostics" title="عیب‌یابی">
+      <svg viewBox="0 0 24 24"><path d="M4 18V6m0 12h16"/><path d="m6 15 4-5 3 2 5-7"/><path d="M15 5h3v3"/></svg><span>آمار و عیب‌یابی</span>
+    </button>
+    <button class="nav-item" data-view="about" title="درباره">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg><span>درباره پروژه</span>
+    </button>
+  </nav>
+  <div class="sidebar-bottom"><strong>ProxyDeck 0.3</strong>Local-first · Python + HTML</div>
+</aside>
+
 <main class="main">
-<header class="topbar"><div class="page-title"><h1 id="viewTitle">مدیریت پراکسی‌ها</h1><p id="viewSub">کاتالوگ محلی، بررسی کیفیت و مدیریت اتصال</p></div><div class="top-actions"><button class="quiet" onclick="load()">به‌روزرسانی جدول</button><button onclick="testAll()">تست همه</button><button class="primary" onclick="scan()">کشف پراکسی‌های جدید</button></div></header>
-<section class="connection"><span class="led" id="connLed"></span><div class="conn-info"><small>پراکسی انتخاب‌شده · SELECTED ENDPOINT</small><strong id="activeProxy">هنوز پراکسی‌ای انتخاب نشده است</strong><small id="selectedStatus">No active connection</small></div><div class="conn-actions"><button id="disconnectBtn" class="danger" onclick="disconnect()">قطع اتصال</button></div></section>
-<section class="stats"><div class="stat"><label>ذخیره‌شده</label><strong id="total">0</strong><em>endpoint</em></div><div class="stat"><label>آنلاین و تازه</label><strong id="online">0</strong><em>available</em></div><div class="stat"><label>سازگار با YouTube</label><strong id="yt">0</strong><em>web-youtube</em></div><div class="stat"><label>سازگار با Gemini</label><strong id="gm">0</strong><em>web-gemini</em></div></section>
-<div class="task"><div class="task-icon">⌁</div><div class="task-content"><strong id="taskTitle">وضعیت عملیات</strong><small id="message">آماده به کار · منتظر فرمان</small><div class="progress"><div class="bar" id="bar"></div></div></div><span id="progressText" class="task-idle">Idle</span></div>
-<section class="workspace view active" id="view-proxies">
-<div class="filters"><input class="search" id="q" placeholder="جست‌وجوی IP، کشور یا منبع" oninput="render()"><select id="country" onchange="render()"><option value="">همه کشورها</option></select><select id="protocol" onchange="render()"><option value="">همه پروتکل‌ها</option><option>HTTP</option><option>HTTPS</option><option>SOCKS4</option><option>SOCKS5</option></select><select id="service" onchange="render()"><option value="">همه سرویس‌ها</option><option value="youtube">YouTube</option><option value="gemini">Gemini</option><option value="general">Web</option></select><select id="status" onchange="render()"><option value="">همه وضعیت‌ها</option><option value="online">Online</option><option value="offline">Offline</option><option value="unsupported">Unsupported</option><option value="stale">Stale</option></select></div>
-<div class="tabs"><button class="active" data-tab="all">همه پراکسی‌ها</button><button data-tab="online">آنلاین</button><button data-tab="youtube">web-youtube</button><button data-tab="gemini">web-gemini</button><button data-tab="stale">قدیمی‌ها</button></div>
-<div class="table-wrap"><table id="proxyTable"><colgroup id="colgroup"><col style="width:17%"><col style="width:9%"><col style="width:7%"><col style="width:7%"><col style="width:11%"><col style="width:8%"><col style="width:14%"><col style="width:12%"><col style="width:15%"></colgroup><thead><tr><th data-col="0"><div class="th-inner">Endpoint<span class="grip"></span></div></th><th data-col="1">وضعیت<span class="grip"></span></th><th data-col="2" data-sort="tcp_ping_ms">TCP<span class="grip"></span></th><th data-col="3" data-sort="latency_ms">Web<span class="grip"></span></th><th data-col="4" data-sort="country">موقعیت<span class="grip"></span></th><th data-col="5">پروتکل<span class="grip"></span></th><th data-col="6">قابلیت‌ها<span class="grip"></span></th><th data-col="7">منبع<span class="grip"></span></th><th data-col="8">عملیات<span class="grip"></span></th></tr></thead><tbody id="rows"><tr><td colspan="9" class="empty">هنوز داده‌ای ثبت نشده است.</td></tr></tbody></table></div>
-<div class="footer"><span id="countLabel">0 مورد</span><span>برای تغییر عرض ستون، لبه عنوان ستون را بکشید.</span></div></section>
-<section class="workspace view" id="view-diagnostics"><div class="about"><h2>تست و عیب‌یابی</h2><p>دو نوع سنجش مستقل وجود دارد. TCP زمان برقراری اتصال به پورت پراکسی است؛ Web زمان دریافت پاسخ از مقصد آزمایشی از مسیر پراکسی است. این مقادیر ICMP ping نیستند.</p><p>تست مجدد، تمام endpointهای ذخیره‌شده را بررسی و نتیجه‌ها را به‌روزرسانی می‌کند. کشف منابع، فهرست‌های عمومی را دوباره دریافت کرده و endpointهای تازه را اضافه می‌کند.</p><div class="top-actions"><button onclick="testAll()">تست مجدد همه پراکسی‌های ذخیره‌شده</button><button class="primary" onclick="scan()">دریافت و تست منابع جدید</button><button onclick="load()">بارگذاری مجدد کاتالوگ</button></div><p id="diagInfo" class="muted"></p></div></section>
-<section class="workspace view" id="view-about"><div class="about"><h2>ProxyDeck</h2><p>یک ابزار سبک و محلی برای گردآوری، ارزیابی و مدیریت پراکسی‌های عمومی. هسته با Python و کتابخانه استاندارد نوشته شده و رابط وب از طریق localhost اجرا می‌شود.</p><ul><li>جمع‌آوری چندمنبعی و حذف endpointهای تکراری</li><li>تست دسترسی، زمان TCP، زمان پاسخ وب و بررسی سازگاری سرویس‌ها</li><li>فیلتر، مرتب‌سازی و نگهداری محلی نتایج</li><li>اتصال و بازگردانی تنظیم پراکسی کاربر در Windows</li></ul><p class="muted">پراکسی عمومی قابل اعتماد نیست. وضعیت Online به معنی امن بودن، ناشناس ماندن یا دسترسی تضمین‌شده به سرویس‌ها نیست.</p></div></section>
-<div class="notice"><b>نکته امنیتی:</b> پراکسی عمومی ناشناس و غیرقابل‌اعتماد است. از آن برای ورود به حساب‌های حساس، پرداخت یا انتقال اطلاعات خصوصی استفاده نکنید. HTTPS محتوا را تا مقصد رمزگذاری می‌کند اما اپراتور پراکسی همچنان می‌تواند فراداده اتصال را ببیند.</div>
-</main></div>
+  <header class="topbar">
+    <div class="heading"><h1 id="viewTitle">داشبورد پراکسی‌ها</h1><p id="viewSubtitle">کاتالوگ محلی، سنجش مقصد و مدیریت اتصال</p></div>
+    <div class="top-actions">
+      <button id="testAllBtn" onclick="testAll()">تست همه پراکسی‌ها</button>
+      <button class="primary" id="scanBtn" onclick="scan()">کشف پراکسی‌های تازه</button>
+    </div>
+  </header>
+
+  <section class="connection">
+    <span class="connection-led" id="connectionLed"></span>
+    <div class="connection-info"><small id="connectionCaption">وضعیت اتصال سیستم</small><strong id="activeProxy">هنوز پراکسی‌ای متصل نشده است</strong><small id="connectionStatus">System proxy is disabled</small></div>
+    <div class="connection-actions"><button class="danger small" id="disconnectBtn" onclick="disconnect()" disabled>قطع اتصال</button></div>
+  </section>
+
+  <div class="operation" aria-live="polite">
+    <div class="operation-symbol"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5l2 2"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M4 20v-5h5"/></svg></div>
+    <div class="operation-info"><div class="operation-title" id="taskTitle">وضعیت عملیات</div><div class="operation-message" id="taskMessage">آماده به کار؛ عملیات پس‌زمینه در دسترس است.</div><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div></div>
+    <span class="operation-count" id="progressCount">آماده</span>
+    <button class="danger small operation-cancel" id="cancelBtn" onclick="cancelOperation()">لغو عملیات</button>
+  </div>
+
+  <section class="view active" id="view-dashboard">
+    <div class="stats">
+      <div class="stat"><span class="stat-label">کل پراکسی‌های ذخیره‌شده</span><strong class="stat-value" id="totalCount">0</strong><span class="stat-foot">Local catalogue</span></div>
+      <div class="stat"><span class="stat-label">آنلاین و تازه</span><strong class="stat-value" id="onlineCount">0</strong><span class="stat-foot">Successfully checked</span></div>
+      <div class="stat"><span class="stat-label">سازگار با YouTube</span><strong class="stat-value" id="youtubeCount">0</strong><span class="stat-foot">HTTPS endpoint response</span></div>
+      <div class="stat"><span class="stat-label">دسترسی محدود</span><strong class="stat-value" id="degradedCount">0</strong><span class="stat-foot">TCP reachable · needs target test</span></div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head"><div><h2 class="panel-title">سنجش بر اساس مقصد دلخواه</h2><p class="panel-subtitle">یک نشانی وارد کن تا پراکسی‌ها دقیقاً از مسیر همان مقصد بررسی و مرتب شوند.</p></div><span class="pill neutral">Target-based test</span></div>
+      <div class="panel-body">
+        <div class="target-grid">
+          <div class="field"><label for="targetUrl">نشانی وب‌سایت مقصد</label><input id="targetUrl" type="url" placeholder="https://www.youtube.com/" autocomplete="url" spellcheck="false"></div>
+          <button class="primary" id="targetBtn" onclick="testTarget()">سنجش همه برای این مقصد</button>
+        </div>
+        <div class="helper">نتیجه شامل وضعیت HTTP، زمان دریافت پاسخ و حجم داده دریافتی است. این سنجش دسترسی وب را می‌سنجد؛ پخش ویدئو، ورود به حساب یا عملکرد همه صفحات را تضمین نمی‌کند.</div>
+        <div class="privacy-note"><strong>نکته حریم خصوصی:</strong> با HTTPS، اپراتور شبکه معمولاً اتصال تو به IP پراکسی را می‌بیند؛ اما اپراتور خود پراکسی می‌تواند مقصد و فراداده اتصال را مشاهده کند. این ابزار DNS leak protection، تونل سراسری یا Kill Switch نیست و ناشناس‌بودن مقصد را تضمین نمی‌کند.</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div><h2 class="panel-title">کاتالوگ پراکسی‌ها</h2><p class="panel-subtitle">فهرست به‌صورت خودکار همگام می‌شود؛ نیازی به دکمه Refresh نیست.</p></div><span class="pill neutral" id="visibleCount">0 مورد</span></div>
+      <div class="toolbar">
+        <input class="search" id="searchInput" placeholder="جست‌وجوی IP، کشور یا نام منبع" oninput="renderTable()">
+        <select id="countryFilter" onchange="renderTable()"><option value="">همه کشورها</option></select>
+        <select id="protocolFilter" onchange="renderTable()"><option value="">همه پروتکل‌ها</option><option>HTTP</option><option>HTTPS</option><option>SOCKS4</option><option>SOCKS5</option></select>
+        <select id="statusFilter" onchange="renderTable()"><option value="">همه وضعیت‌ها</option><option value="online">Online</option><option value="offline">Offline</option><option value="degraded">دسترسی محدود</option><option value="unsupported">Unsupported</option><option value="untested">Untested</option></select>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="all">همه</button><button class="tab" data-tab="online">آنلاین</button><button class="tab" data-tab="degraded">دسترسی محدود</button><button class="tab" data-tab="youtube">YouTube</button><button class="tab" data-tab="gemini">Gemini</button><button class="tab" data-tab="target">مقصد دلخواه</button><button class="tab" data-tab="stale">قدیمی</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th data-sort="address">Endpoint</th><th data-sort="status">وضعیت</th><th data-sort="tcp_ping_ms">TCP</th><th data-sort="latency_ms">Web</th><th data-sort="target_latency">مقصد دلخواه</th><th data-sort="country">موقعیت</th><th>قابلیت‌ها</th><th>منبع</th><th>عملیات</th></tr></thead>
+          <tbody id="proxyRows"><tr><td colspan="9" class="empty">در حال دریافت کاتالوگ…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="table-foot"><span id="tableCount">0 پراکسی</span><span>TCP زمان برقراری اتصال به پورت است، نه ICMP ping.</span></div>
+    </section>
+  </section>
+
+  <section class="view" id="view-sources">
+    <section class="panel">
+      <div class="panel-head"><div><h2 class="panel-title">منابع کشف پراکسی</h2><p class="panel-subtitle">منابع را مستقل مدیریت کن؛ منابع غیرفعال در دورهای بعدی دریافت نمی‌شوند.</p></div><span class="pill neutral" id="enabledSources">0 فعال</span></div>
+      <div class="panel-body">
+        <div class="sources-list" id="sourcesList"><div class="empty">در حال بارگذاری منابع…</div></div>
+        <div class="add-source">
+          <div class="field"><label for="sourceName">نام منبع</label><input id="sourceName" placeholder="مثلاً My proxy list"></div>
+          <div class="field"><label for="sourceUrl">نشانی مستقیم فهرست (HTTPS)</label><input id="sourceUrl" type="url" placeholder="https://example.com/proxies.txt" spellcheck="false"></div>
+          <button class="primary" id="addSourceBtn" onclick="addSource()">افزودن منبع</button>
+        </div>
+        <p class="helper">منبع سفارشی باید یک فهرست متنی مستقیم از endpointها ارائه کند؛ فایل‌های HTML، صفحه‌های وب معمولی یا منابع نیازمند ورود پشتیبانی نمی‌شوند. نشانی‌های محلی و IPهای خصوصی رد می‌شوند.</p>
+      </div>
+    </section>
+    <section class="panel"><div class="panel-head"><div><h2 class="panel-title">چطور بازده منابع را بخوانیم؟</h2><p class="panel-subtitle">تعداد endpoint با تعداد پراکسی‌های سالم یکسان نیست.</p></div></div><div class="panel-body info-grid">
+      <div class="info-card"><h3>کاندیداهای دریافتی</h3><p>تعداد خطوطی که از فهرست منبع به‌عنوان endpoint قابل‌خواندن استخراج شده‌اند. تکراری‌ها ممکن است در چند منبع ظاهر شوند.</p></div>
+      <div class="info-card"><h3>آنلاین‌های ۲۴ ساعت اخیر</h3><p>تعداد endpointهای متعلق به آن منبع که در ۲۴ ساعت اخیر تست موفق داشته‌اند. پراکسی‌های قدیمی‌تر در این عدد شمرده نمی‌شوند.</p></div>
+      <div class="info-card"><h3>هزینه بررسی کمتر</h3><p>در دور کشف بعدی، endpointهای قبلی فقط به‌دلیل تکرار در منبع دوباره تست نمی‌شوند؛ تنها endpointهای تازه سنجیده می‌شوند.</p></div>
+      <div class="info-card"><h3>مدیریت منابع ضعیف</h3><p>اگر منبعی چند بار فهرست خالی یا خطا بدهد، می‌توانی آن را موقتاً غیرفعال کنی و بعداً دوباره فعالش کنی.</p></div>
+    </div></section>
+  </section>
+
+  <section class="view" id="view-diagnostics">
+    <section class="panel"><div class="panel-head"><div><h2 class="panel-title">معنای سنجه‌ها</h2><p class="panel-subtitle">عدد کم‌تر همیشه به معنی تجربه بهتر نیست.</p></div></div><div class="panel-body info-grid">
+      <div class="info-card"><h3>TCP connect time</h3><p>زمان برقراری اتصال TCP به IP و پورت پراکسی؛ ICMP ping نیست و کیفیت تونل یا بارگذاری سایت را اندازه نمی‌گیرد.</p></div>
+      <div class="info-card"><h3>دسترسی محدود (Degraded)</h3><p>پورت پراکسی TCP را می‌پذیرد، اما مقصدهای عمومی آزمایشی پاسخ موفق نمی‌دهند. این پراکسی حذف نمی‌شود و می‌توان آن را برای مقصد دلخواه جداگانه سنجید.</p></div>
+      <div class="info-card"><h3>Web response time</h3><p>زمان دریافت پاسخ HTTPS از سرویس آزمایشی از مسیر پراکسی، همراه با سربار شبکه و پاسخ سرور مقصد. به تجربه وب نزدیک‌تر است.</p></div>
+      <div class="info-card"><h3>تست مقصد</h3><p>یک درخواست HTTP(S) واقعی به نشانی واردشده می‌فرستد و status code و زمان پاسخ را ثبت می‌کند. ممکن است یک سایت بر اساس منطقه، CAPTCHA یا سیاست دسترسی پاسخ متفاوت بدهد.</p></div>
+      <div class="info-card"><h3>تست سرویس‌ها</h3><p>برای YouTube از endpoint سبک generate_204 و برای Gemini از صفحه اصلی استفاده می‌شود. این‌ها آزمون دسترسی وب‌اند، نه آزمون پخش ویدئو یا ورود.</p></div>
+      <div class="info-card"><h3>موقعیت جغرافیایی</h3><p>در نسخه فعلی موقعیت IP از سرویس ثالث استعلام نمی‌شود تا IP خروجی بدون ضرورت برای ارائه‌دهنده دیگری ارسال نشود؛ ممکن است کشور خالی باشد.</p></div>
+      <div class="info-card"><h3>لغو عملیات</h3><p>لغو، کارهای در صف را متوقف می‌کند؛ درخواست‌های در حال اجرا پس از پایان timeout خاتمه می‌یابند. هر نتیجه تکمیل‌شده بلافاصله در کاتالوگ محلی ثبت می‌شود.</p></div>
+    </div></section>
+  </section>
+
+  <section class="view" id="view-about">
+    <section class="panel"><div class="panel-body about-copy">
+      <h2>ProxyDeck</h2>
+      <p>ابزاری سبک و متن‌باز برای گردآوری، ارزیابی، فیلتر و مدیریت پراکسی‌های عمومی. هسته با Python و کتابخانه استاندارد نوشته شده و رابط کاربری HTML/CSS/JavaScript بدون فریم‌ورک یا سرویس فونت خارجی اجرا می‌شود.</p>
+      <div class="about-links"><a href="https://github.com/C4rdx/ProxyDeck" target="_blank" rel="noopener noreferrer">مخزن رسمی پروژه در GitHub</a><a href="https://github.com/C4rdx/ProxyDeck/issues" target="_blank" rel="noopener noreferrer">گزارش مسئله و پیشنهاد</a></div>
+      <h3>معماری و وابستگی‌ها</h3>
+      <p>رابط در مرورگر پیش‌فرض سیستم باز می‌شود؛ Firefox یا مرورگر خاصی پیش‌نیاز نیست. سرویس محلی Python روی loopback اجرا می‌شود. هیچ کتابخانه JavaScript، فونت آنلاین، درایور شبکه یا دسترسی Administrator لازم نیست.</p>
+      <h3>محدودیت اتصال</h3>
+      <p>در نسخه فعلی، تنظیم پراکسی سیستم در Windows فقط برای endpointهای HTTP فعال می‌شود. پشتیبانی از SOCKS، تونل TUN، مسیریابی UDP، محافظت DNS، Kill Switch و مدیریت پراکسی سراسری Linux پیاده‌سازی نشده‌اند.</p>
+      <h3>امنیت</h3>
+      <p>پراکسی عمومی یک اپراتور ناشناس است. از آن برای حساب‌های حساس، پرداخت یا اطلاعات محرمانه استفاده نکن. HTTPS محتوای ارتباط با مقصد را رمزگذاری می‌کند، اما پراکسی همچنان می‌تواند فراداده اتصال را ببیند. وضعیت Online گواهی امنیت یا ناشناس‌بودن نیست.</p>
+    </div></section>
+  </section>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-let data=[],scanState={},activeId="",selectedId="",sortKey="latency_ms",asc=true,tab="all";
+let data=[],sources=[],scanState={},systemState={},revision=0,selectedId="",tab="all",sortKey="latency_ms",sortAsc=true,currentTargetKey="";
 const $=id=>document.getElementById(id);
-async function api(path,body){const r=await fetch(path,{method:body?"POST":"GET",headers:{"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});if(!r.ok)throw Error("HTTP "+r.status);return r.json()}
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function stamp(t){return t?new Date(t*1000).toLocaleString():"—"}
-function tags(x){return [["general","web"],["youtube","web-youtube"],["gemini","web-gemini"]].filter(([k])=>x[k]).map(([,v])=>'<span class="tag good">'+v+'</span>').join("")||'<span class="muted">—</span>'}
-function statusTag(x){if(x.id===activeId)return '<span class="tag good">Connected</span>';if(x.stale)return '<span class="tag old">Stale</span>';return x.status==="online"?'<span class="tag good">Online</span>':x.status==="offline"?'<span class="tag bad">Offline</span>':'<span class="tag">Unsupported</span>'}
-async function load(){try{const j=await api("/api/proxies");data=j.rows||[];scanState=j.scan||{};activeId=(j.state||{}).active||"";selectedId=selectedId||activeId;updateHeader();updateStats();updateTask();render();$("diagInfo").textContent="ذخیره‌شده: "+data.length+" · آنلاین: "+data.filter(x=>x.status==="online"&&!x.stale).length+" · آخرین عملیات: "+(scanState.message||"—")}catch(e){$("message").textContent="خطا در ارتباط با هسته: "+e}}
-function updateHeader(){const row=data.find(x=>x.id===selectedId)||data.find(x=>x.id===activeId);$("activeProxy").textContent=row?row.address+" · "+(row.country||"Unknown")+" · "+row.protocol:(activeId||"هنوز پراکسی‌ای انتخاب نشده است");$("selectedStatus").textContent=row?(row.id===activeId?"CONNECTED · پراکسی فعال":"SELECTED · هنوز متصل نشده"):"No active connection";$("connLed").classList.toggle("on",!!activeId);$("disconnectBtn").disabled=!activeId}
-function updateStats(){$("total").textContent=data.length;$("online").textContent=data.filter(x=>x.status==="online"&&!x.stale).length;$("yt").textContent=data.filter(x=>x.youtube&&!x.stale).length;$("gm").textContent=data.filter(x=>x.gemini&&!x.stale).length;const old=$("country").value;const cs=[...new Set(data.map(x=>x.country).filter(Boolean))].sort();$("country").innerHTML='<option value="">همه کشورها</option>'+cs.map(c=>'<option>'+esc(c)+'</option>').join("");$("country").value=old}
-function updateTask(){const running=!!scanState.running;$("taskTitle").textContent=running?(scanState.kind==="refresh"?"کشف و بررسی منابع":scanState.kind==="test-all"?"تست پراکسی‌های ذخیره‌شده":"تست endpoint انتخاب‌شده"):"وضعیت عملیات";$("message").textContent=scanState.message||"آماده به کار · منتظر فرمان";$("bar").style.width=scanState.total?Math.round(scanState.done/scanState.total*100)+"%":"0%";$("progressText").textContent=running?(scanState.done+" / "+scanState.total):"Idle"}
-function render(){const q=$("q").value.toLowerCase(),co=$("country").value,pr=$("protocol").value,sv=$("service").value,st=$("status").value;let a=data.filter(x=>(!q||[x.address,x.country,x.source,x.exit_ip].join(" ").toLowerCase().includes(q))&&(!co||x.country===co)&&(!pr||x.protocol===pr)&&(!sv||x[sv])&&(!st||(st==="stale"?x.stale:x.status===st&&!x.stale))&&(tab==="all"||(tab==="online"?x.status==="online"&&!x.stale:tab==="stale"?x.stale:!!x[tab]&&!x.stale)));a.sort((x,y)=>{const A=x[sortKey]??Infinity,B=y[sortKey]??Infinity;return (A>B?1:A<B?-1:0)*(asc?1:-1)});$("countLabel").textContent=a.length+" مورد";$("rows").innerHTML=a.length?a.map(x=>'<tr class="'+(x.id===selectedId?"selected":"")+'" data-row="'+esc(x.id)+'"><td><span class="endpoint">'+esc(x.address)+'</span><span class="subline">'+esc(x.exit_ip||x.id)+'</span></td><td>'+statusTag(x)+'</td><td>'+((x.tcp_ping_ms??"—")+" ms")+'</td><td>'+((x.latency_ms??"—")+" ms")+'</td><td>'+esc(x.country||"—")+' <span class="muted">'+esc(x.city||"")+'</span></td><td><span class="tag">'+esc(x.protocol)+'</span></td><td>'+tags(x)+'</td><td title="'+esc(x.source)+'">'+esc(x.source||"—")+'</td><td><div class="row-actions"><button data-act="test" data-id="'+esc(x.id)+'">تست</button><button data-act="connect" data-id="'+esc(x.id)+'" '+(x.status!=="online"||x.stale||x.protocol!=="HTTP"?"disabled":"")+'>اتصال</button></div></td></tr>').join(""):'<tr><td colspan="9" class="empty">موردی پیدا نشد.</td></tr>'}
-async function scan(){try{await api("/api/scan",{});await load()}catch(e){$("message").textContent="خطا: "+e}}
-async function testAll(){try{await api("/api/test-all",{});await load()}catch(e){$("message").textContent="خطا: "+e}}
-async function testOne(id){selectedId=id;try{await api("/api/test",{id});await load()}catch(e){$("message").textContent="خطا: "+e}}
-async function connect(id){selectedId=id;try{const j=await api("/api/connect",{id});$("message").textContent=j.message||"درخواست انجام شد";await load()}catch(e){$("message").textContent="خطا در اتصال: "+e}}
-async function disconnect(){try{const j=await api("/api/disconnect",{});$("message").textContent=j.message;await load()}catch(e){$("message").textContent="خطا: "+e}}
-$("rows").addEventListener("click",e=>{const b=e.target.closest("button[data-act]");if(b){const id=b.dataset.id;b.dataset.act==="test"?testOne(id):connect(id);return}const tr=e.target.closest("tr[data-row]");if(tr){selectedId=tr.dataset.row;updateHeader();render()}});
-document.querySelectorAll("th[data-sort]").forEach(th=>th.addEventListener("click",()=>{const k=th.dataset.sort;if(sortKey===k)asc=!asc;else{sortKey=k;asc=true}render()}));
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{tab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));render()}));
-document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.view;document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id==="view-"+v));$("viewTitle").textContent=v==="proxies"?"مدیریت پراکسی‌ها":v==="diagnostics"?"تست و عیب‌یابی":"درباره ProxyDeck";$("viewSub").textContent=v==="proxies"?"کاتالوگ محلی، بررسی کیفیت و مدیریت اتصال":v==="diagnostics"?"بررسی endpointهای ذخیره‌شده و منابع عمومی":"اطلاعات پروژه و محدودیت‌ها"}));
-// Resizable table columns; widths persist locally.
-(function(){const table=$("proxyTable"),cols=[...$("colgroup").children],key="proxydeck-col-widths";try{const saved=JSON.parse(localStorage.getItem(key)||"[]");saved.forEach((w,i)=>{if(cols[i]&&Number(w)>45)cols[i].style.width=w+"px"})}catch{}let drag=null;table.querySelectorAll("th .grip").forEach((g,i)=>{g.addEventListener("mousedown",e=>{e.preventDefault();drag={i,x:e.clientX,w:cols[i].getBoundingClientRect().width};document.body.style.cursor="col-resize"});});window.addEventListener("mousemove",e=>{if(!drag)return;const w=Math.max(65,drag.w+(e.clientX-drag.x));cols[drag.i].style.width=w+"px"});window.addEventListener("mouseup",()=>{if(!drag)return;try{localStorage.setItem(key,JSON.stringify(cols.map(c=>Math.round(c.getBoundingClientRect().width))))}catch{}drag=null;document.body.style.cursor=""})})();
-load();setInterval(load,2500);
-</script></body></html>
+const titles={dashboard:["داشبورد پراکسی‌ها","کاتالوگ محلی، سنجش مقصد و مدیریت اتصال"],sources:["مدیریت منابع","انتخاب منابع، مشاهده بازده و افزودن فهرست جدید"],diagnostics:["آمار و عیب‌یابی","درک سنجه‌ها و رفتار عملیات پس‌زمینه"],about:["درباره ProxyDeck","معماری، امنیت و اطلاعات پروژه"]};
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function toast(message){const t=$("toast");t.textContent=message;t.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove("show"),3600)}
+async function api(path,body){const r=await fetch(path,{method:body?"POST":"GET",headers:body?{"Content-Type":"application/json"}:{},body:body?JSON.stringify(body):undefined,cache:"no-store"});let j={};try{j=await r.json()}catch{}if(!r.ok)throw Error(j.error||j.message||("HTTP "+r.status));return j}
+function latestTarget(row){const values=Object.values(row.target_results||{}).filter(x=>!currentTargetKey||x.target_key===currentTargetKey);return values.sort((a,b)=>(b.checked_at||0)-(a.checked_at||0))[0]||null}
+function newestTargetKey(rows){let newest=null;for(const row of rows)for(const item of Object.values(row.target_results||{}))if(!newest||(item.checked_at||0)>(newest.checked_at||0))newest=item;return newest?.target_key||""}
+function currentTargetName(){for(const row of data){const item=latestTarget(row);if(item?.target_label)return item.target_label}return "مقصد فعلی"}
+function showView(view){document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.view===view));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+view));$("viewTitle").textContent=titles[view][0];$("viewSubtitle").textContent=titles[view][1];window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".nav-item").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+function setBusy(){const busy=!!scanState.running;["scanBtn","testAllBtn","targetBtn","addSourceBtn","sourceName","sourceUrl"].forEach(id=>$(id).disabled=busy);document.querySelectorAll('button[data-action="test"]').forEach(b=>b.disabled=busy);document.querySelectorAll("[data-source]").forEach(b=>b.disabled=busy);$("cancelBtn").classList.toggle("visible",busy);$("taskTitle").textContent=busy?(scanState.kind==="refresh"?"کشف منابع و endpointهای تازه":scanState.kind==="test-all"?"تست همه پراکسی‌های ذخیره‌شده":scanState.kind==="test-one"?"تست پراکسی انتخاب‌شده":"سنجش مقصد دلخواه"):"وضعیت عملیات";$("taskMessage").textContent=scanState.message||"آماده به کار";const pct=scanState.total?Math.min(100,Math.round(scanState.done/scanState.total*100)):0;$("progressFill").style.width=pct+"%";$("progressCount").textContent=busy?(scanState.done+" / "+scanState.total):"آماده"}
+function updateHeader(){const row=data.find(x=>x.id===systemState.active);const active=!!systemState.active;$("connectionLed").classList.toggle("on",active);$("connectionCaption").textContent=active?"پراکسی فعال در تنظیمات سیستم":"وضعیت اتصال سیستم";$("activeProxy").textContent=row?row.address+" · "+row.protocol:(active?systemState.active:"هنوز پراکسی‌ای متصل نشده است");$("connectionStatus").textContent=active?"CONNECTED · Windows system proxy":"System proxy is disabled";$("disconnectBtn").disabled=!active}
+function updateStats(){$("totalCount").textContent=data.length;$("onlineCount").textContent=data.filter(x=>x.status==="online"&&!x.stale).length;$("youtubeCount").textContent=data.filter(x=>x.youtube&&!x.stale).length;$("degradedCount").textContent=data.filter(x=>x.status==="degraded"&&!x.stale).length;const old=$("countryFilter").value;const countries=[...new Set(data.map(x=>x.country).filter(Boolean))].sort();$("countryFilter").innerHTML='<option value="">همه کشورها</option>'+countries.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join("");$("countryFilter").value=old}
+function statusPill(x){if(x.stale)return '<span class="pill warn">قدیمی</span>';if(x.status==="online")return '<span class="pill good">آنلاین</span>';if(x.status==="degraded")return '<span class="pill warn">دسترسی محدود</span>';if(x.status==="offline")return '<span class="pill bad">آفلاین</span>';if(x.status==="unsupported")return '<span class="pill neutral">پشتیبانی‌نشده</span>';return '<span class="pill neutral">تست‌نشده</span>'}
+function renderTable(){const q=$("searchInput").value.trim().toLowerCase(),country=$("countryFilter").value,protocol=$("protocolFilter").value,status=$("statusFilter").value;let rows=data.filter(x=>(!q||[x.address,x.country,x.source,x.exit_ip].join(" ").toLowerCase().includes(q))&&(!country||x.country===country)&&(!protocol||x.protocol===protocol)&&(!status||(status==="untested"?(!x.status||x.status==="untested"):x.status===status))&&(tab==="all"||(tab==="online"?x.status==="online"&&!x.stale:tab==="degraded"?x.status==="degraded"&&!x.stale:tab==="youtube"?x.youtube&&!x.stale:tab==="gemini"?x.gemini&&!x.stale:tab==="stale"?x.stale:tab==="target"?!!latestTarget(x):false)));rows.sort((a,b)=>{let A=a[sortKey],B=b[sortKey];if(sortKey==="target_latency"){A=latestTarget(a)?.latency_ms??Infinity;B=latestTarget(b)?.latency_ms??Infinity}else if(sortKey==="status"){A=a.status||"";B=b.status||""}else{A=A??(typeof A==="number"?Infinity:"");B=B??(typeof B==="number"?Infinity:"")}return (A>B?1:A<B?-1:0)*(sortAsc?1:-1)});$("visibleCount").textContent=rows.length+" مورد";$("tableCount").textContent=rows.length+" پراکسی از "+data.length;const targetRows=rows.length?rows.map(x=>{const t=latestTarget(x);const target=t?(t.ok?'<span class="pill good">HTTP '+t.status+'</span>':'<span class="pill bad">'+(t.status?"HTTP "+t.status:"ناموفق")+'</span>'):'<span class="muted">—</span>';const capabilities=[[x.general,"Web"],[x.youtube,"YouTube"],[x.gemini,"Gemini"]].filter(y=>y[0]).map(y=>'<span class="pill good">'+y[1]+'</span>').join(" ")||'<span class="muted">—</span>';return '<tr data-id="'+esc(x.id)+'" class="'+(x.id===selectedId?"selected":"")+'"><td><span class="endpoint">'+esc(x.address)+'</span><span class="endpoint-meta">'+esc(x.exit_ip||x.id)+'</span></td><td>'+statusPill(x)+'</td><td>'+(x.tcp_ping_ms??"—")+' ms</td><td>'+(x.latency_ms??"—")+' ms</td><td>'+target+(t?' <span class="muted">'+(t.latency_ms??"—")+' ms</span>':'')+'</td><td>'+esc(x.country||"—")+'</td><td>'+capabilities+'</td><td title="'+esc(x.source||"")+'">'+esc(x.source||"—")+'</td><td><div class="row-actions"><button class="small" data-action="test" data-id="'+esc(x.id)+'" '+(scanState.running?"disabled":"")+'>تست</button><button class="small primary" data-action="connect" data-id="'+esc(x.id)+'" '+(!((x.status==="online")||(x.status==="degraded"&&Object.values(x.target_results||{}).some(r=>r.ok)))||x.stale||x.protocol!=="HTTP"?"disabled":"")+'>اتصال</button></div></td></tr>'}).join(""):'<tr><td colspan="9" class="empty">پراکسی‌ای مطابق فیلترها پیدا نشد.</td></tr>';$("proxyRows").innerHTML=targetRows}
+function renderSources(){
+  const enabled=sources.filter(x=>x.enabled).length;
+  $("enabledSources").textContent=enabled+" از "+sources.length+" فعال";
+  $("sourcesList").innerHTML=sources.map(s=>{
+    const owned=data.filter(x=>String(x.source||"").split(", ").includes(s.name));
+    const targetTests=owned.map(latestTarget).filter(Boolean);
+    const targetSuccess=targetTests.filter(x=>x.ok).length;
+    const targetSummary=currentTargetKey
+      ? currentTargetName()+": "+targetSuccess+" موفق از "+targetTests.length+" تست‌شده"
+      : "مقصد: هنوز تست نشده";
+    const lastError=s.last_error?"خطا: "+esc(s.last_error)
+      :s.last_checked?"آخرین دریافت: "+new Date(s.last_checked*1000).toLocaleString()
+      :"هنوز بررسی نشده";
+    return '<article class="source-card"><div><div class="source-name">'+esc(s.name)
+      +(s.custom?' <span class="pill neutral">سفارشی</span>':'')
+      +'</div><span class="source-url">'+esc(s.url)+'</span><div class="source-meta">'
+      +'کاندیدای آخرین دریافت: '+(s.last_candidates??0)
+      +' · آنلاین تست‌شده در ۲۴ ساعت اخیر: '+(s.last_online??0)
+      +' · '+targetSummary+' · '+lastError
+      +'</div></div><label class="switch"><input type="checkbox" data-source="'+esc(s.id)+'" '
+      +(s.enabled?"checked":"")+(scanState.running?" disabled":"")
+      +'><span>'+(s.enabled?"فعال":"غیرفعال")+'</span></label></article>';
+  }).join("")||'<div class="empty">منبعی ثبت نشده است.</div>';
+  document.querySelectorAll("[data-source]").forEach(el=>el.addEventListener("change",()=>toggleSource(el.dataset.source,el.checked)));
+}
+function renderAll(){updateStats();updateHeader();setBusy();renderTable();renderSources()}
+async function loadAll(){try{const j=await api("/api/proxies");data=j.rows||[];sources=j.sources||[];scanState=j.scan||{};systemState=j.state||{};currentTargetKey=scanState.target_key||newestTargetKey(data)||currentTargetKey;revision=j.revision||0;renderAll()}catch(e){toast("خطا در بارگذاری: "+e.message)}}
+async function poll(){try{const j=await api("/api/status");scanState=j.scan||{};systemState=j.state||{};currentTargetKey=scanState.target_key||currentTargetKey;setBusy();updateHeader();if(j.revision!==revision){const p=await api("/api/proxies");data=p.rows||[];sources=p.sources||[];revision=p.revision||0;updateStats();renderTable();renderSources()}}catch(e){$("taskMessage").textContent="ارتباط با سرویس محلی قطع شده است: "+e.message}}
+async function startAction(path,body){try{const j=await api(path,body||{});toast(j.message||"درخواست ثبت شد.");await poll()}catch(e){toast(e.message)}}
+function scan(){startAction("/api/scan",{})}
+function testAll(){startAction("/api/test-all",{})}
+function testTarget(){const url=$("targetUrl").value.trim();if(!url){toast("ابتدا نشانی مقصد را وارد کن.");$("targetUrl").focus();return}tab="target";sortKey="target_latency";sortAsc=true;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x.dataset.tab==="target"));renderTable();startAction("/api/target-test",{url})}
+function cancelOperation(){startAction("/api/cancel",{})}
+async function testOne(id){selectedId=id;renderTable();startAction("/api/test",{id})}
+async function connect(id){selectedId=id;renderTable();try{const j=await api("/api/connect",{id});toast(j.message);await poll()}catch(e){toast("اتصال انجام نشد: "+e.message)}}
+async function disconnect(){try{const j=await api("/api/disconnect",{});toast(j.message);await poll()}catch(e){toast(e.message)}}
+async function toggleSource(id,enabled){try{const j=await api("/api/sources/toggle",{id,enabled});sources=j.sources||sources;renderSources();toast(enabled?"منبع فعال شد.":"منبع غیرفعال شد.")}catch(e){toast(e.message);renderSources()}}
+async function addSource(){const name=$("sourceName").value.trim(),url=$("sourceUrl").value.trim();try{const j=await api("/api/sources/add",{name,url});sources=j.sources||sources;$("sourceName").value="";$("sourceUrl").value="";renderSources();toast("منبع اضافه شد.")}catch(e){toast(e.message)}}
+$("proxyRows").addEventListener("click",e=>{const btn=e.target.closest("button[data-action]");if(btn){const id=btn.dataset.id;if(btn.dataset.action==="test")testOne(id);else connect(id);return}const tr=e.target.closest("tr[data-id]");if(tr){selectedId=tr.dataset.id;renderTable()}});
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{tab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));renderTable()}));
+document.querySelectorAll("th[data-sort]").forEach(th=>th.addEventListener("click",()=>{const key=th.dataset.sort;if(sortKey===key)sortAsc=!sortAsc;else{sortKey=key;sortAsc=true}renderTable()}));
+loadAll();setInterval(poll,1100);
+</script>
+</body>
+</html>

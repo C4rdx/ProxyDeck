@@ -278,9 +278,13 @@ def print_header():
     print("="*72); print("ProxyDeck  |  Public proxy diagnostics")
     print("CONNECTED: "+connected_label()); print("="*72)
 def tags(r):
-    return " ".join(t for k,t in (("general","web"),("youtube","youtube"),("gemini","gemini")) if r.get(k))
+    return " ".join(t for k,t in (("general","web-general"),("youtube","web-youtube"),("gemini","web-gemini")) if r.get(k))
+def ping_sort_key(x):
+    value=x.get("tcp_ping_ms")
+    if value is None: value=x.get("latency_ms")
+    return (value is None,value if value is not None else 999999)
 def show_rows(rows):
-    rows=sorted(rows,key=lambda x:(x.get("latency_ms") is None,x.get("latency_ms") or 999999))
+    rows=sorted(rows,key=ping_sort_key)
     print(f"{'#':>3} {'ENDPOINT':<23} {'TCP':>6} {'WEB':>7} {'TAGS':<23} {'COUNTRY':<16} STATUS")
     print("-"*100)
     for i,r in enumerate(rows,1):
@@ -306,7 +310,7 @@ def menu():
             clear_screen(); print_header(); show_rows(load_db()); input("\nEnter to return…")
         elif choice=="4":
             rows=sorted([x for x in load_db() if x.get("status")=="online" and x.get("protocol")=="HTTP" and not x.get("stale")],
-                        key=lambda x:x.get("latency_ms") or 999999)
+                        key=ping_sort_key)
             clear_screen(); print_header(); show_rows(rows)
             if rows:
                 try:

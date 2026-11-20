@@ -41,12 +41,12 @@ The interactive CLI provides:
 
 1. Refresh public sources and test newly discovered endpoints.
 2. Re-test all endpoints already stored locally.
-3. Show saved proxies sorted by measured web response time.
+3. Show saved proxies sorted by TCP connection time (falling back to Web response time until a TCP result is available).
 4. Connect to an online HTTP proxy.
 5. Disconnect and restore the previous proxy settings.
 6. Open the local dashboard.
 
-The terminal list includes compact service tags such as web, youtube, and gemini. After selecting a proxy, the screen is redrawn and the active endpoint is displayed in the header.
+The terminal list includes service tags such as web-general, web-youtube, and web-gemini. After selecting a proxy, the screen is cleared and redrawn, with the active endpoint displayed in the header.
 
 ## Measurements
 

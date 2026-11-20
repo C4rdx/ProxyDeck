@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+proxies.json
+state.json
+*.tmp

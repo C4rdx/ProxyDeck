@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>ProxyDeck | مدیریت و ارزیابی پراکسی</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2216%22 fill=%22%232b65b2%22/%3E%3Ctext x=%2232%22 y=%2242%22 text-anchor=%22middle%22 font-family=%22Arial,sans-serif%22 font-size=%2228%22 font-weight=%22900%22 fill=%22white%22%3EPD%3C/text%3E%3C/svg%3E">
 <style>
 :root{color-scheme:dark;--bg:#0b1018;--side:#0f1723;--panel:#131e2c;--panel2:#182638;--panel3:#1c2d42;--line:#26384d;--text:#e8eef6;--muted:#91a1b4;--blue:#7daeff;--blue2:#3977d5;--green:#52d4a6;--red:#f1848d;--amber:#e9bd70;--radius:15px;--shadow:0 14px 36px #0003}
 *{box-sizing:border-box}
@@ -22,7 +23,9 @@ button.danger{color:#ffb5bb;background:#38252d;border-color:#67404a}
 button.small{padding:6px 10px;font-size:12px}
 a{color:var(--blue);text-decoration:none}
 a:hover{text-decoration:underline}
-.app{min-height:100vh;display:grid;grid-template-columns:252px minmax(0,1fr)}
+.app{min-height:100vh;display:grid;grid-template-columns:252px minmax(0,1fr);transition:grid-template-columns .2s ease}
+.app.sidebar-collapsed{grid-template-columns:0 minmax(0,1fr)}
+.app.sidebar-collapsed .sidebar{width:0;min-width:0;padding-left:0;padding-right:0;border:0;overflow:hidden}
 .sidebar{position:sticky;top:0;height:100vh;background:linear-gradient(180deg,#111c2a,#0e1621);border-left:1px solid var(--line);padding:24px 17px;display:flex;flex-direction:column;gap:28px;z-index:5}
 .brand{display:flex;align-items:center;gap:12px;padding:0 7px}
 .brand-mark{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#3676ce,#1d4d8b);box-shadow:0 8px 24px #245da455;font-size:19px;font-weight:900;letter-spacing:-1px}
@@ -38,7 +41,10 @@ a:hover{text-decoration:underline}
 .sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:17px 9px 0;color:#8292a6;font-size:11px}
 .sidebar-bottom strong{display:block;color:#c4d0df;font-size:12px;margin-bottom:3px}
 .main{min-width:0;padding:28px clamp(18px,3vw,42px) 54px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:22px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:22px}
+.topbar-leading{display:flex;align-items:center;gap:12px;min-width:0}
+#sidebarToggle{flex:none;width:38px;height:38px;padding:7px;display:grid;place-items:center}
+#sidebarToggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
 .heading h1{margin:0;font-size:23px;font-weight:800;letter-spacing:-.3px}
 .heading p{margin:4px 0 0;color:var(--muted);font-size:12px}
 .top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -86,9 +92,22 @@ input::placeholder{color:#6f8197}
 .tab{background:transparent;border:0;border-bottom:2px solid transparent;border-radius:0;color:var(--muted);white-space:nowrap;padding:9px 13px;font-size:11px}
 .tab.active{color:#eaf3ff;border-bottom-color:var(--blue)}
 .table-wrap{width:100%;max-height:none;height:auto;overflow-x:auto;overflow-y:visible}
-table{border-collapse:separate;border-spacing:0;width:100%;min-width:1050px;table-layout:auto}
-thead th{position:sticky;top:0;z-index:2;background:#1b2a3c;color:#9fb0c4;font-size:10px;font-weight:700;text-align:right;white-space:nowrap;padding:12px 11px;border-bottom:1px solid #34485f;cursor:pointer;user-select:none}
-tbody td{padding:11px;border-bottom:1px solid #233246;color:#d4deea;font-size:11px;white-space:nowrap;vertical-align:middle}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:900px;table-layout:fixed}
+#proxyTable col:nth-child(1){width:18%}#proxyTable col:nth-child(2){width:8%}#proxyTable col:nth-child(3){width:6%}#proxyTable col:nth-child(4){width:6%}#proxyTable col:nth-child(5){width:12%}#proxyTable col:nth-child(6){width:7%}#proxyTable col:nth-child(7){width:14%}#proxyTable col:nth-child(8){width:15%}#proxyTable col:nth-child(9){width:14%}
+thead th{position:relative;overflow:visible;padding:9px 7px;font-size:10px}
+tbody td{padding:8px 7px;font-size:10px;overflow:hidden;text-overflow:ellipsis}
+.endpoint{font-size:11px}.endpoint-meta{font-size:9px}
+.col-resizer{position:absolute;left:-3px;top:0;width:7px;height:100%;cursor:col-resize;touch-action:none;z-index:4}
+.col-resizer:after{content:"";position:absolute;left:3px;top:25%;height:50%;width:1px;background:#526982;opacity:.65}
+.col-resizer:hover:after,.col-resizer.dragging:after{width:2px;background:var(--blue);opacity:1}
+body.resizing-columns{cursor:col-resize;user-select:none}
+.source-cell{white-space:normal;line-height:1.5}
+.source-details{display:inline-block;max-width:100%;vertical-align:middle}
+.source-details summary{cursor:pointer;color:#b9cbe0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-size:10px}
+.source-details ul{position:absolute;z-index:6;max-width:280px;max-height:220px;overflow:auto;margin:5px 0 0;padding:8px 24px 8px 10px;background:#0c1724;border:1px solid #405873;border-radius:8px;box-shadow:var(--shadow);direction:rtl}
+.source-details li{padding:2px 0;overflow-wrap:anywhere;font-size:10px}
+thead th{position:sticky;top:0;z-index:2;background:#1b2a3c;color:#9fb0c4;font-size:10px;font-weight:700;text-align:right;white-space:nowrap;padding:9px 7px;border-bottom:1px solid #34485f;cursor:pointer;user-select:none}
+tbody td{padding:8px 7px;border-bottom:1px solid #233246;color:#d4deea;font-size:10px;white-space:nowrap;vertical-align:middle}
 tbody tr:hover td{background:#19283a}
 tbody tr.selected td{background:#1a3049}
 .endpoint{display:block;font:600 12px Consolas,monospace;direction:ltr;text-align:right;color:#e5effb}
@@ -158,7 +177,8 @@ tbody tr.selected td{background:#1a3049}
 
 <main class="main">
   <header class="topbar">
-    <div class="heading"><h1 id="viewTitle">داشبورد پراکسی‌ها</h1><p id="viewSubtitle">کاتالوگ محلی، سنجش مقصد و مدیریت اتصال</p></div>
+    <div class="topbar-leading"><button id="sidebarToggle" class="ghost" type="button" aria-label="بستن فهرست کناری" aria-expanded="true" title="بستن یا بازکردن فهرست"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><path d="M9 6v12"/></svg></button>
+    <div class="heading"><h1 id="viewTitle">داشبورد پراکسی‌ها</h1><p id="viewSubtitle">کاتالوگ محلی، سنجش مقصد و مدیریت اتصال</p></div></div>
     <div class="top-actions">
       <button id="testAllBtn" onclick="testAll()">تست همه پراکسی‌ها</button>
       <button class="primary" id="scanBtn" onclick="scan()">کشف پراکسی‌های تازه</button>
@@ -210,7 +230,8 @@ tbody tr.selected td{background:#1a3049}
         <button class="tab active" data-tab="all">همه</button><button class="tab" data-tab="online">آنلاین</button><button class="tab" data-tab="degraded">دسترسی محدود</button><button class="tab" data-tab="youtube">YouTube</button><button class="tab" data-tab="gemini">Gemini</button><button class="tab" data-tab="target">مقصد دلخواه</button><button class="tab" data-tab="stale">قدیمی</button>
       </div>
       <div class="table-wrap">
-        <table>
+        <table id="proxyTable">
+          <colgroup><col><col><col><col><col><col><col><col><col></colgroup>
           <thead><tr><th data-sort="address">Endpoint</th><th data-sort="status">وضعیت</th><th data-sort="tcp_ping_ms">TCP</th><th data-sort="latency_ms">Web</th><th data-sort="target_latency">مقصد دلخواه</th><th data-sort="country">موقعیت</th><th>قابلیت‌ها</th><th>منبع</th><th>عملیات</th></tr></thead>
           <tbody id="proxyRows"><tr><td colspan="9" class="empty">در حال دریافت کاتالوگ…</td></tr></tbody>
         </table>
@@ -261,6 +282,8 @@ tbody tr.selected td{background:#1a3049}
       <p>رابط در مرورگر پیش‌فرض سیستم باز می‌شود؛ Firefox یا مرورگر خاصی پیش‌نیاز نیست. سرویس محلی Python روی loopback اجرا می‌شود. هیچ کتابخانه JavaScript، فونت آنلاین، درایور شبکه یا دسترسی Administrator لازم نیست.</p>
       <h3>راه‌انداز و جابه‌جایی پوشه</h3>
       <p>در Windows، راه‌انداز گرافیکی سرویس را بدون پنجره کنسول اجرا می‌کند و رابط را در مرورگر پیش‌فرض باز می‌کند. مسیر کاری Python و مرورگر به پوشه موقت منتقل شده تا مرورگر پوشه پروژه را قفل نکند. برای توقف کامل سرویس و بازگردانی تنظیمات پراکسی، از DISABLE-RESET-WINDOWS.cmd استفاده کن؛ پیش از جابه‌جایی نسخه‌های قدیمی نیز همه پنجره‌های مرورگر را ببند.</p>
+      <h3>سفارشی‌سازی رابط</h3>
+      <p>جدول پراکسی‌ها با عرض جمع‌وجور نمایش داده می‌شود. برای تغییر اندازه هر ستون، جداکننده کنار عنوان آن را با ماوس بکش؛ اندازه‌های انتخاب‌شده در همان مرورگر ذخیره می‌شوند. اگر یک پراکسی از چند منبع آمده باشد، خلاصه ستون منبع را باز کن تا نام همه منابع را ببینی. فهرست کناری نیز از دکمه سربرگ بسته و دوباره باز می‌شود و انتخاب آن در مرورگر باقی می‌ماند. نشان PD تب مرورگر به‌صورت SVG داخلی است و فایل یا درخواست خارجی ندارد.</p>
       <h3>محدودیت اتصال</h3>
       <p>در نسخه فعلی، تنظیم پراکسی سیستم در Windows فقط برای endpointهای HTTP فعال می‌شود. پشتیبانی از SOCKS، تونل TUN، مسیریابی UDP، محافظت DNS، Kill Switch و مدیریت پراکسی سراسری Linux پیاده‌سازی نشده‌اند.</p>
       <h3>امنیت</h3>
@@ -286,7 +309,7 @@ function setBusy(){const busy=!!scanState.running;["scanBtn","testAllBtn","targe
 function updateHeader(){const row=data.find(x=>x.id===systemState.active);const active=!!systemState.active;$("connectionLed").classList.toggle("on",active);$("connectionCaption").textContent=active?"پراکسی فعال در تنظیمات سیستم":"وضعیت اتصال سیستم";$("activeProxy").textContent=row?row.address+" · "+row.protocol:(active?systemState.active:"هنوز پراکسی‌ای متصل نشده است");$("connectionStatus").textContent=active?"CONNECTED · Windows system proxy":"System proxy is disabled";$("disconnectBtn").disabled=!active}
 function updateStats(){$("totalCount").textContent=data.length;$("onlineCount").textContent=data.filter(x=>x.status==="online"&&!x.stale).length;$("youtubeCount").textContent=data.filter(x=>x.youtube&&!x.stale).length;$("degradedCount").textContent=data.filter(x=>x.status==="degraded"&&!x.stale).length;const old=$("countryFilter").value;const countries=[...new Set(data.map(x=>x.country).filter(Boolean))].sort();$("countryFilter").innerHTML='<option value="">همه کشورها</option>'+countries.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join("");$("countryFilter").value=old}
 function statusPill(x){if(x.stale)return '<span class="pill warn">قدیمی</span>';if(x.status==="online")return '<span class="pill good">آنلاین</span>';if(x.status==="degraded")return '<span class="pill warn">دسترسی محدود</span>';if(x.status==="offline")return '<span class="pill bad">آفلاین</span>';if(x.status==="unsupported")return '<span class="pill neutral">پشتیبانی‌نشده</span>';return '<span class="pill neutral">تست‌نشده</span>'}
-function renderTable(){const q=$("searchInput").value.trim().toLowerCase(),country=$("countryFilter").value,protocol=$("protocolFilter").value,status=$("statusFilter").value;let rows=data.filter(x=>(!q||[x.address,x.country,x.source,x.exit_ip].join(" ").toLowerCase().includes(q))&&(!country||x.country===country)&&(!protocol||x.protocol===protocol)&&(!status||(status==="untested"?(!x.status||x.status==="untested"):x.status===status))&&(tab==="all"||(tab==="online"?x.status==="online"&&!x.stale:tab==="degraded"?x.status==="degraded"&&!x.stale:tab==="youtube"?x.youtube&&!x.stale:tab==="gemini"?x.gemini&&!x.stale:tab==="stale"?x.stale:tab==="target"?!!latestTarget(x):false)));rows.sort((a,b)=>{let A=a[sortKey],B=b[sortKey];if(sortKey==="target_latency"){A=latestTarget(a)?.latency_ms??Infinity;B=latestTarget(b)?.latency_ms??Infinity}else if(sortKey==="status"){A=a.status||"";B=b.status||""}else{A=A??(typeof A==="number"?Infinity:"");B=B??(typeof B==="number"?Infinity:"")}return (A>B?1:A<B?-1:0)*(sortAsc?1:-1)});$("visibleCount").textContent=rows.length+" مورد";$("tableCount").textContent=rows.length+" پراکسی از "+data.length;const targetRows=rows.length?rows.map(x=>{const t=latestTarget(x);const target=t?(t.ok?'<span class="pill good">HTTP '+t.status+'</span>':'<span class="pill bad">'+(t.status?"HTTP "+t.status:"ناموفق")+'</span>'):'<span class="muted">—</span>';const capabilities=[[x.general,"Web"],[x.youtube,"YouTube"],[x.gemini,"Gemini"]].filter(y=>y[0]).map(y=>'<span class="pill good">'+y[1]+'</span>').join(" ")||'<span class="muted">—</span>';return '<tr data-id="'+esc(x.id)+'" class="'+(x.id===selectedId?"selected":"")+'"><td><span class="endpoint">'+esc(x.address)+'</span><span class="endpoint-meta">'+esc(x.exit_ip||x.id)+'</span></td><td>'+statusPill(x)+'</td><td>'+(x.tcp_ping_ms??"—")+' ms</td><td>'+(x.latency_ms??"—")+' ms</td><td>'+target+(t?' <span class="muted">'+(t.latency_ms??"—")+' ms</span>':'')+'</td><td>'+esc(x.country||"—")+'</td><td>'+capabilities+'</td><td title="'+esc(x.source||"")+'">'+esc(x.source||"—")+'</td><td><div class="row-actions"><button class="small" data-action="test" data-id="'+esc(x.id)+'" '+(scanState.running?"disabled":"")+'>تست</button><button class="small primary" data-action="connect" data-ready="'+(!((x.status==="online")||(x.status==="degraded"&&Object.values(x.target_results||{}).some(r=>r.ok)))||x.stale||x.protocol!=="HTTP"?"0":"1")+'" data-id="'+esc(x.id)+'" '+(!((x.status==="online")||(x.status==="degraded"&&Object.values(x.target_results||{}).some(r=>r.ok)))||x.stale||x.protocol!=="HTTP"?"disabled":"")+'>اتصال</button></div></td></tr>'}).join(""):'<tr><td colspan="9" class="empty">پراکسی‌ای مطابق فیلترها پیدا نشد.</td></tr>';$("proxyRows").innerHTML=targetRows}
+function renderTable(){const q=$("searchInput").value.trim().toLowerCase(),country=$("countryFilter").value,protocol=$("protocolFilter").value,status=$("statusFilter").value;let rows=data.filter(x=>(!q||[x.address,x.country,x.source,x.exit_ip].join(" ").toLowerCase().includes(q))&&(!country||x.country===country)&&(!protocol||x.protocol===protocol)&&(!status||(status==="untested"?(!x.status||x.status==="untested"):x.status===status))&&(tab==="all"||(tab==="online"?x.status==="online"&&!x.stale:tab==="degraded"?x.status==="degraded"&&!x.stale:tab==="youtube"?x.youtube&&!x.stale:tab==="gemini"?x.gemini&&!x.stale:tab==="stale"?x.stale:tab==="target"?!!latestTarget(x):false)));rows.sort((a,b)=>{let A=a[sortKey],B=b[sortKey];if(sortKey==="target_latency"){A=latestTarget(a)?.latency_ms??Infinity;B=latestTarget(b)?.latency_ms??Infinity}else if(sortKey==="status"){A=a.status||"";B=b.status||""}else{A=A??(typeof A==="number"?Infinity:"");B=B??(typeof B==="number"?Infinity:"")}return (A>B?1:A<B?-1:0)*(sortAsc?1:-1)});$("visibleCount").textContent=rows.length+" مورد";$("tableCount").textContent=rows.length+" پراکسی از "+data.length;const targetRows=rows.length?rows.map(x=>{const t=latestTarget(x);const target=t?(t.ok?'<span class="pill good">HTTP '+t.status+'</span>':'<span class="pill bad">'+(t.status?"HTTP "+t.status:"ناموفق")+'</span>'):'<span class="muted">—</span>';const capabilities=[[x.general,"Web"],[x.youtube,"YouTube"],[x.gemini,"Gemini"]].filter(y=>y[0]).map(y=>'<span class="pill good">'+y[1]+'</span>').join(" ")||'<span class="muted">—</span>';const sourceNames=String(x.source||"").split(",").map(v=>v.trim()).filter(Boolean);const sourceCell=sourceNames.length>1?'<details class="source-details"><summary>'+esc(sourceNames[0])+' +'+(sourceNames.length-1)+' منبع</summary><ul>'+sourceNames.map(v=>'<li>'+esc(v)+'</li>').join("")+'</ul></details>':esc(sourceNames[0]||"—");return '<tr data-id="'+esc(x.id)+'" class="'+(x.id===selectedId?"selected":"")+'"><td><span class="endpoint">'+esc(x.address)+'</span><span class="endpoint-meta">'+esc(x.exit_ip||x.id)+'</span></td><td>'+statusPill(x)+'</td><td>'+(x.tcp_ping_ms??"—")+' ms</td><td>'+(x.latency_ms??"—")+' ms</td><td>'+target+(t?' <span class="muted">'+(t.latency_ms??"—")+' ms</span>':'')+'</td><td>'+esc(x.country||"—")+'</td><td>'+capabilities+'</td><td class="source-cell" title="'+esc(x.source||"")+'">'+sourceCell+'</td><td><div class="row-actions"><button class="small" data-action="test" data-id="'+esc(x.id)+'" '+(scanState.running?"disabled":"")+'>تست</button><button class="small primary" data-action="connect" data-ready="'+(!((x.status==="online")||(x.status==="degraded"&&Object.values(x.target_results||{}).some(r=>r.ok)))||x.stale||x.protocol!=="HTTP"?"0":"1")+'" data-id="'+esc(x.id)+'" '+(!((x.status==="online")||(x.status==="degraded"&&Object.values(x.target_results||{}).some(r=>r.ok)))||x.stale||x.protocol!=="HTTP"?"disabled":"")+'>اتصال</button></div></td></tr>'}).join(""):'<tr><td colspan="9" class="empty">پراکسی‌ای مطابق فیلترها پیدا نشد.</td></tr>';$("proxyRows").innerHTML=targetRows}
 function renderSources(){
   const enabled=sources.filter(x=>x.enabled).length;
   $("enabledSources").textContent=enabled+" از "+sources.length+" فعال";
@@ -331,6 +354,25 @@ async function addSource(){const name=$("sourceName").value.trim(),url=$("source
 $("proxyRows").addEventListener("click",e=>{const btn=e.target.closest("button[data-action]");if(btn){const id=btn.dataset.id;if(btn.dataset.action==="test")testOne(id);else connect(id);return}const tr=e.target.closest("tr[data-id]");if(tr){selectedId=tr.dataset.id;renderTable()}});
 document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{tab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));renderTable()}));
 document.querySelectorAll("th[data-sort]").forEach(th=>th.addEventListener("click",()=>{const key=th.dataset.sort;if(sortKey===key)sortAsc=!sortAsc;else{sortKey=key;sortAsc=true}renderTable()}));
+function setupColumnResizing(){
+ const table=$("proxyTable"),cols=[...table.querySelectorAll("colgroup col")],headers=[...table.querySelectorAll("thead th")],key="proxydeck.table.columnWidths.v1";let saved={};
+ try{saved=JSON.parse(localStorage.getItem(key)||"{}")||{}}catch{}
+ cols.forEach((col,i)=>{if(Number.isFinite(saved[i])&&saved[i]>=52)col.style.width=saved[i]+"px"});
+ headers.forEach((th,i)=>{const handle=document.createElement("span");handle.className="col-resizer";handle.setAttribute("role","separator");handle.setAttribute("aria-orientation","vertical");handle.setAttribute("aria-label","تغییر عرض ستون "+(th.textContent.trim()||i+1));handle.addEventListener("click",e=>e.stopPropagation());th.appendChild(handle);
+  handle.addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();const startX=e.clientX,startWidth=cols[i].getBoundingClientRect().width;handle.classList.add("dragging");document.body.classList.add("resizing-columns");handle.setPointerCapture(e.pointerId);
+   const move=ev=>{const width=Math.max(52,Math.min(520,startWidth+startX-ev.clientX));cols[i].style.width=width+"px"};
+   const finish=()=>{handle.classList.remove("dragging");document.body.classList.remove("resizing-columns");try{localStorage.setItem(key,JSON.stringify(cols.map(c=>Math.round(c.getBoundingClientRect().width))))}catch{}handle.removeEventListener("pointermove",move);handle.removeEventListener("pointerup",finish);handle.removeEventListener("pointercancel",finish)};
+   handle.addEventListener("pointermove",move);handle.addEventListener("pointerup",finish);handle.addEventListener("pointercancel",finish);
+  });
+ });
+}
+function setupSidebar(){
+ const app=document.querySelector(".app"),button=$("sidebarToggle"),key="proxydeck.sidebar.collapsed";let collapsed=false;
+ try{collapsed=localStorage.getItem(key)==="1"}catch{}
+ const apply=()=>{app.classList.toggle("sidebar-collapsed",collapsed);button.setAttribute("aria-expanded",String(!collapsed));button.setAttribute("aria-label",collapsed?"بازکردن فهرست کناری":"بستن فهرست کناری");button.title=collapsed?"بازکردن فهرست":"بستن فهرست"};
+ button.addEventListener("click",()=>{collapsed=!collapsed;apply();try{localStorage.setItem(key,collapsed?"1":"0")}catch{}});apply();
+}
+setupColumnResizing();setupSidebar();
 loadAll();setInterval(poll,1100);
 </script>
 </body>

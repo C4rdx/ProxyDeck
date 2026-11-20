@@ -16,6 +16,10 @@ ProxyDeck is a lightweight, local-first workspace for discovering, testing, filt
 - Measure TCP connection setup separately from end-to-end HTTPS response time.
 - Check lightweight YouTube, Gemini, and general-web endpoints.
 - Filter and sort the catalogue, including by custom-destination response time.
+- Keep the proxy table compact by default, while allowing each column to be resized with the mouse; chosen widths are saved in the browser.
+- Expand a proxy row's source cell to inspect every contributing source without permanently widening the table.
+- Collapse or reopen the navigation sidebar; its state is remembered by the browser.
+- Display the project’s PD mark as a self-contained SVG browser-tab icon; no external image or favicon request is needed.
 - Activate supported HTTP proxies in the Windows per-user system-proxy settings and restore the previous settings safely.
 - Open the dashboard in the operating system's default browser; Firefox is not a dependency.
 
@@ -56,6 +60,14 @@ The dashboard listens on 127.0.0.1:8765; it is not exposed to the LAN.
 5. Connect: activate a freshly tested HTTP proxy on Windows. A degraded proxy requires at least one successful destination test. The original per-user proxy settings are saved and restored on disconnect, unless another application changed those settings in the meantime.
 6. Cancel: stop queued work. Already completed results remain in the local database; in-flight requests finish when their timeout expires.
 7. Disable/reset: run DISABLE-RESET-WINDOWS.cmd to cancel active work, restore the previous Windows proxy settings, and stop the local UI service. This safety action preserves the proxy catalogue and source preferences; it does not erase user data.
+
+## Dashboard layout and controls
+
+The proxy catalogue uses a compact fixed-layout table so the common fields remain visible without excessive horizontal scrolling on typical desktop widths. Drag the divider at the left edge of a column header to resize that column. The browser stores the selected widths locally; they do not modify the proxy catalogue or any server-side data. Very narrow screens may still require horizontal scrolling.
+
+When an endpoint is associated with multiple sources, the source column shows a compact summary. Expand it to inspect the complete source list. No source association is removed or truncated from stored data.
+
+Use the sidebar control in the dashboard header to collapse or reopen navigation. The browser remembers this preference locally. The PD favicon is embedded as SVG data in the HTML document, so it works offline and adds no external asset dependency.
 
 ## Measurements
 

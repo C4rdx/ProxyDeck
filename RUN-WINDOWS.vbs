@@ -6,6 +6,9 @@ Dim http, running, i
 Set sh = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 
+' Keep both Python and the default browser out of the project directory.
+' Some browsers retain their startup working directory and can block folder moves.
+sh.CurrentDirectory = sh.ExpandEnvironmentStrings("%TEMP%")
 root = fso.GetParentFolderName(WScript.ScriptFullName)
 py = "C:\msys64\ucrt64\bin\pythonw.exe"
 If Not fso.FileExists(py) Then py = "pythonw.exe"

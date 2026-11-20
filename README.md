@@ -36,6 +36,8 @@ Only Python's standard library is required. No pip packages, JavaScript framewor
 3. The launcher starts the local Python service without a visible console and opens http://127.0.0.1:8765 in the default browser.
 4. Run CLI-WINDOWS.cmd for the terminal menu.
 
+The graphical launcher uses the operating system's default browser and starts both the Python service and browser from the temporary directory. This avoids inheriting the project folder as the browser's working directory, which can otherwise keep a Windows directory handle open and prevent moving or renaming the project.
+
 The Windows launcher prefers C:\msys64\ucrt64\bin\pythonw.exe when present and otherwise uses pythonw.exe from PATH. It does not assume Firefox is installed.
 
 ### Linux
@@ -53,6 +55,7 @@ The dashboard listens on 127.0.0.1:8765; it is not exposed to the LAN.
 4. Test a destination: enter a URL such as https://www.youtube.com/; online and TCP-reachable/degraded HTTP/HTTPS proxies are tested against that exact destination and sorted by the measured response.
 5. Connect: activate a freshly tested HTTP proxy on Windows. A degraded proxy requires at least one successful destination test. The original per-user proxy settings are saved and restored on disconnect, unless another application changed those settings in the meantime.
 6. Cancel: stop queued work. Already completed results remain in the local database; in-flight requests finish when their timeout expires.
+7. Disable/reset: run DISABLE-RESET-WINDOWS.cmd to cancel active work, restore the previous Windows proxy settings, and stop the local UI service. This safety action preserves the proxy catalogue and source preferences; it does not erase user data.
 
 ## Measurements
 
@@ -97,6 +100,7 @@ These files are runtime/user data and are intentionally excluded from source con
 
 - The local HTTP service binds only to 127.0.0.1. It rejects non-loopback clients, unexpected Host headers, and cross-origin POST requests.
 - The dashboard uses no third-party scripts, remote fonts, or external UI assets.
+- The graphical Windows launcher uses the default browser; Firefox is neither required nor detected as a dependency. Its working directory is deliberately set to the system temporary folder to avoid locking the project directory.
 - Source URLs must use HTTPS, and redirects are validated. Local/private source destinations are rejected.
 - Destination tests accept HTTP(S) URLs, reject credentials, local/private IP literals, local hostnames, and non-standard ports. Redirects are validated too.
 - Proxy endpoints from public lists must use literal public IP addresses; hostname endpoints are rejected to reduce DNS-rebinding and private-network risks.
@@ -106,7 +110,7 @@ These files are runtime/user data and are intentionally excluded from source con
 - The scanner does not query a third-party geolocation API; exit IP addresses are not sent to a separate geolocation provider.
 - Windows disconnect restores the previous settings only if the current values still match the settings ProxyDeck applied. This avoids overwriting a later change made by the user or another application.
 
-Public proxies remain untrusted. Do not use them for passwords, banking, payments, private accounts, or confidential work. HTTPS protects request content between the client and destination when certificate validation succeeds, but the proxy operator can still observe connection metadata and the destination. An ISP may see the connection to the proxy, but this application is not a VPN and does not provide DNS leak protection, TUN routing, a kill switch, or a guarantee that the destination is hidden from every observer.
+Public proxies remain untrusted. Do not use them for passwords, banking, payments, private accounts, or confidential work. HTTPS protects request content between the client and destination when certificate validation succeeds, but the proxy operator can still observe connection metadata and the destination. With a plain HTTP proxy, the ISP may also observe the HTTP CONNECT request, including the destination hostname and port. HTTPS encrypts the tunneled application content to the destination, but does not encrypt the client-to-proxy hop when the proxy itself is plain HTTP. An HTTPS proxy can encrypt that hop as well. This application is not a VPN and does not provide DNS leak protection, TUN routing, a kill switch, or a guarantee that the destination is hidden from every observer.
 
 ## Supported platforms and limitations
 
@@ -120,6 +124,7 @@ Public proxies remain untrusted. Do not use them for passwords, banking, payment
 ## Development
 
     python -m py_compile core.py
+    python -m unittest discover -s tests -v
     python core.py
     python core.py --ui
     python core.py --scan 500

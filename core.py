@@ -394,7 +394,7 @@ def start_job(kind, message, worker, meta=None):
         CANCEL.clear()
         SCAN.update(running=True, done=0, total=0, message=message, kind=kind,
                     stage="starting", started_at=int(time.time()), cancel_requested=False,
-                    target_url=(meta or {}).get("target_url", ""),
+                    # Never expose or persist the complete user-supplied destination URL in status.
                     target_key=(meta or {}).get("target_key", ""),
                     target_label=(meta or {}).get("target_label", ""))
 
@@ -813,7 +813,15 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
         try:
             data = self.read_body()
-            if self.path == "/api/scan":
+            if self.path == "/api/shutdown":
+                # Stop queued work first; in-flight network requests finish at their bounded timeout.
+                CANCEL.set()
+                with LOCK:
+                    if SCAN["running"]:
+                        SCAN["cancel_requested"] = True
+                self.send_json({"ok": True, "message": "سرویس محلی در حال توقف است."})
+                threading.Thread(target=self.server.shutdown, name="ProxyDeck-Shutdown", daemon=True).start()
+            elif self.path == "/api/scan":
                 ok = start_job("refresh", "در حال شروع کشف منابع…", lambda: scan_worker(DEFAULT_LIMIT))
                 self.send_json({"ok": ok, "message": "کشف شروع شد." if ok else "یک عملیات دیگر در حال اجراست."}, 200 if ok else 409)
             elif self.path == "/api/test-all":
@@ -963,8 +971,39 @@ def menu():
             break
 
 
+def disable_reset():
+    """Restore Windows proxy settings, cancel active work, and stop the local UI service."""
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    base = "http://127.0.0.1:8765"
+    headers = {
+        "Content-Type": "application/json",
+        "Origin": base,
+        "Host": "127.0.0.1:8765",
+    }
+    try:
+        req = urllib.request.Request(base + "/api/disconnect", data=b"{}", headers=headers, method="POST")
+        with urllib.request.urlopen(req, timeout=3) as response:
+            payload = json.loads(response.read(65536).decode("utf-8"))
+            print(payload.get("message", "تنظیمات پراکسی بازگردانی شد."))
+    except Exception:
+        # The UI may already be stopped; restore from the persisted state directly.
+        print(disconnect())
+
+    try:
+        req = urllib.request.Request(base + "/api/shutdown", data=b"{}", headers=headers, method="POST")
+        with urllib.request.urlopen(req, timeout=3) as response:
+            payload = json.loads(response.read(65536).decode("utf-8"))
+            print(payload.get("message", "سرویس محلی متوقف شد."))
+    except Exception:
+        print("سرویس محلی از قبل متوقف است یا نسخه قدیمی آن فرمان توقف را پشتیبانی نمی‌کند.")
+    print("فهرست پراکسی‌ها و تنظیم منابع حفظ شدند؛ فایل‌های داده پاک نمی‌شوند.")
+
+
 if __name__ == "__main__":
-    if "--scan" in sys.argv:
+    if "--disable-reset" in sys.argv:
+        disable_reset()
+    elif "--scan" in sys.argv:
         print(scan_worker(int(sys.argv[sys.argv.index("--scan") + 1]) if len(sys.argv) > 2 else DEFAULT_LIMIT))
     elif "--ui" in sys.argv:
         serve()
